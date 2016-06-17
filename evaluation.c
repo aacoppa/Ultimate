@@ -5,7 +5,7 @@ int otherTurn(int turn) {
     return EX;
 }
 
-float evaluatePosition(uint32_t ** board, int turn) {
+float evaluatePositionRaw(uint32_t ** board, int turn) {
     //Maintain a list of ways each board can be won
     //but skewed by a heuristic of likelyhood that
     //the box will be won, i.e. 2-in-a-row is worth
@@ -15,6 +15,18 @@ float evaluatePosition(uint32_t ** board, int turn) {
         boxWorths[j] = likelyhoodOfWinningBox(board, j, turn);
         
     }
+    return overallLikelyhoodOfWinning(board, turn, boxWorths);
+}
+float evaluatePosition(uint32_t ** board, int turn, float * boxWorths) {
+    //Maintain a list of ways each board can be won
+    //but skewed by a heuristic of likelyhood that
+    //the box will be won, i.e. 2-in-a-row is worth
+    //more than 1-in-a-row
+    /*float * boxWorths = calloc(9, sizeof(float)); 
+    for(int j = 0; j < 9; j++) {
+        boxWorths[j] = likelyhoodOfWinningBox(board, j, turn);
+        
+    }*/
     return overallLikelyhoodOfWinning(board, turn, boxWorths);
 }
 
@@ -29,7 +41,6 @@ float overallLikelyhoodOfWinning(uint32_t ** board, int turn, float * boxWorths)
                  boxWorths[winningPatterns[i][1]] * 
                  boxWorths[winningPatterns[i][2]];
     }
-    free(boxWorths);
     return score;
 }
 int winningLikelyhoodOfPattern(uint32_t ** board, int box, int * squares, int turn) {

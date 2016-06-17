@@ -1,7 +1,6 @@
 #include "tests.h"
 
 void runAllTests() {
-    printf("DEBUG: Running tests...\n\n");
     printf("====================\n");
     printf("board.c\n");
     printf("====================\n");
@@ -281,12 +280,12 @@ int testCountingPatterns() {
     printf("likelyhoodOfWinningBox() works!\n");
     printf("Testing evaluatePosition() and overallLikelyhoodOfWinning()...\n");
     board = initializeBoard();
-    float score = evaluatePosition(board, EX);
+    float score = evaluatePositionRaw(board, EX);
     assert(score == 8 * pow(LIKELYHOOD_OF_WINNING(1), 3));
 
     setSquare(board, 1, 1, EX);
-    v1 = evaluatePosition(board, EX);
-    v2 = evaluatePosition(board, OH);
+    v1 = evaluatePositionRaw(board, EX);
+    v2 = evaluatePositionRaw(board, OH);
 
     assert(v1 > v2);
 
@@ -361,11 +360,22 @@ int testComputer() {
     board = initializeBoard();
     printf("testing minimax()...\n");
 
-    assert(minimax(board, 0, 0, EX, MAX_DEPTH, MIN, MAX) ==
-           evaluatePosition(board, EX));
+    boxWorths = calloc(9, sizeof(float)); 
+    for(int j = 0; j < 9; j++) {
+        boxWorths[j] = likelyhoodOfWinningBox(board, j, EX);
+    }
+    float a = minimax(board, 0, 0, EX, MAX_DEPTH, MIN, MAX);
+    free(boxWorths);
+    float b = evaluatePositionRaw(board, EX);
+    assert(a == b);
     //Will only call min!
+    boxWorths = calloc(9, sizeof(float)); 
+    for(int j = 0; j < 9; j++) {
+        boxWorths[j] = likelyhoodOfWinningBox(board, j, OH);
+    }
     assert(minimax(board, 0, 0, EX, MAX_DEPTH-1, MIN, MAX) == 
            min(board, 0, 0, EX, MAX_DEPTH-1, MIN, MAX));
+    free(boxWorths);
 
     deleteBoard(board);
 
@@ -379,9 +389,15 @@ int testComputer() {
 
         assert((MAX_DEPTH - 1) % 2);
 
+
+        boxWorths = calloc(9, sizeof(float));
+        for(int j = 0; j < 9; j++) {
+            boxWorths[j] = likelyhoodOfWinningBox(board, j, OH);
+        }
         assert(minimax(board, winningPatterns[i][2], 0, EX, MAX_DEPTH - 1, MIN, MAX) == MIN);
         assert(minimax(board, 0, 1, EX, MAX_DEPTH - 1, MIN, MAX) == MIN);
         assert(tree_moves[MAX_DEPTH-1] == winningPatterns[i][2] * 10 + 8);
+        free(boxWorths);
         deleteBoard(board);
     }
 
@@ -397,9 +413,15 @@ int testComputer() {
     setSquare(board, 7, 2, OH);
     setSquare(board, 7, 6, OH);
 
+
+    boxWorths = calloc(9, sizeof(float));
+    for(int j = 0; j < 9; j++) {
+        boxWorths[j] = likelyhoodOfWinningBox(board, j, EX);
+    }
     assert(minimax(board, 0, 0, EX, MAX_DEPTH - 2, MIN, MAX) == MIN);
     assert(tree_moves[MAX_DEPTH-1] == 74);
     assert(tree_moves[MAX_DEPTH-2] == 2);
+    free(boxWorths);
     deleteBoard(board);
 
     board = initializeBoard();
@@ -418,7 +440,12 @@ int testComputer() {
     setSquare(board, 7, 2, OH);
     setSquare(board, 7, 6, OH);
 
+    boxWorths = calloc(9, sizeof(float));
+    for(int j = 0; j < 9; j++) {
+        boxWorths[j] = likelyhoodOfWinningBox(board, j, OH);
+    }
     assert(minimax(board, 1, 0, EX, MAX_DEPTH - 3, MIN, MAX) == MIN);
+    free(boxWorths);
     deleteBoard(board);
 
     printf("minimax() sorta works!\n");

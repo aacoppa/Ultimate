@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "computer.h"
+#include "debug.h"
 
 
 void play();

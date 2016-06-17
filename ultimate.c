@@ -8,6 +8,7 @@
 #include "tests.h"
 #include "board.h"
 #include "game.h"
+#include "debug.h"
 
 
 

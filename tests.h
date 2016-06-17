@@ -2,8 +2,8 @@
 #define TESTS0101924
 
 //Define before all other includes...
-#define DEBUG 1
 
+#include "debug.h"
 #include "board.h"
 #include "queue.h"
 #include "computer.h"

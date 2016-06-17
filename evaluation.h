@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "board.h"
+#include "debug.h"
 
 #define MAX 100000000.0
 #define MIN -100000000.0
@@ -27,8 +28,14 @@ static float LIKELYHOOD_OF_WINNING(int num) {
 int otherTurn(int turn);
 
 /* Returns a float evaluation of the position
+ * but generates a brand new list of
+ * boxWorths
  */
-float evaluatePosition(uint32_t ** board, int turn);
+float evaluatePositionRaw(uint32_t ** board, int turn);
+/* Returns a float evaluation of the position
+ * given an existing list of box worths
+ */
+float evaluatePosition(uint32_t ** board, int turn, float * boxWorths);
 
 /* Given the chance of winning each box
  * we calculate the total chance of winning

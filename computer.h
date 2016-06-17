@@ -1,19 +1,22 @@
 #ifndef COMPUTER123413495
 #define COMPUTER123413495
 
+#include "debug.h"
 #include "board.h"
 #include "queue.h"
 #include "evaluation.h"
 #include <pthread.h>
 #include <semaphore.h>
 #include "tests.h"
+#include "priority_queue.h"
 
 #define MAX_THREADS 8
-#define MAX_DEPTH 6
+#define MAX_DEPTH 8
 
 
 
 int tree_moves[MAX_DEPTH];
+float * boxWorths;
 int number_of_threads;
 
 /* Initilizes the computer, sets up threading, etc
