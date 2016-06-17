@@ -5,26 +5,30 @@ void initComputer(uint32_t ** board, int turn) {
     //return tree_moves[0];
 }
 int getComputerMove(uint32_t ** board, int box, int freebie, int turn) {
-    float value = minimax(board, box, freebie, turn, 0);
+    float value = minimax(board, box, freebie, turn, 0, MIN, MAX);
     return tree_moves[0];
 }
-float minimax(uint32_t ** board, int box, int freebie, int turn, int depth) {
+//Alpha is our lower bound, beta is our upper bound
+//so alpha <= score <= beta
+float minimax(uint32_t ** board, int box, int freebie, int turn, int depth, float alpha, float beta) {
     if(depth == MAX_DEPTH)
         //Always evaluate from the position of our first player
         return evaluatePosition(board, (depth % 2) ? otherTurn(turn) : turn);
     if(depth % 2) {
         //return min(board, turn, box, freebie, depth + 1);
-        return min(board, box, freebie, turn, depth);
+        return min(board, box, freebie, turn, depth, alpha, beta);
     } else {
-        return max(board, box, freebie, turn, depth);
+        return max(board, box, freebie, turn, depth, alpha, beta);
     }
 }
-float max(uint32_t ** board, int box, int freebie, int turn, int depth) {
+float max(uint32_t ** board, int box, int freebie, int turn, int depth, float alpha, float beta) {
+    /* Value 
+     */
     queue_t * possibleMoves = generatePossibleMoves(board, box, freebie);
     //pthread_mutex_lock(&thread_count_m);
     int move = 0;
     int best_move = -1;
-    float max = MIN;
+    //float max = MIN;
     while((move = dequeue(possibleMoves)) != -1) {
         if(best_move == -1)
             best_move = move;
@@ -46,26 +50,29 @@ float max(uint32_t ** board, int box, int freebie, int turn, int depth) {
         if(!isBoxCaptured(board, square)) {
             nextBox = square;
         }
-        float branch_value = minimax(board, nextBox, val, otherTurn(turn), depth + 1);
+        float branch_value = minimax(board, nextBox, val, otherTurn(turn), depth + 1, alpha, beta);
         //Set our max value to be the best move we find
         unmakeMove(board, box, square, val);
-        if(branch_value > max) {
+        if(branch_value > alpha) {
             best_move = move;
-            max = branch_value;
+            alpha = branch_value;
+        }
+        if(alpha >= beta) {
+            deleteQueue(possibleMoves);
+            return alpha;
         }
     }
     tree_moves[depth] = best_move;
     deleteQueue(possibleMoves);
-    return max;
+    return alpha;
     //pthread_mutex_unlock(&thread_count_m);
 }
 
-float min(uint32_t ** board, int box, int freebie, int turn, int depth) {
+float min(uint32_t ** board, int box, int freebie, int turn, int depth, float alpha, float beta) {
     queue_t * possibleMoves = generatePossibleMoves(board, box, freebie);
     //pthread_mutex_lock(&thread_count_m);
     int move = 0;
     int best_move = -1;
-    float min = MAX;
     while((move = dequeue(possibleMoves)) != -1) {
         if(best_move == -1)
             best_move = move;
@@ -87,17 +94,21 @@ float min(uint32_t ** board, int box, int freebie, int turn, int depth) {
             nextBox = square;
         }
         //Recurse down the tree
-        float branch_value = minimax(board, nextBox, val, otherTurn(turn), depth + 1);
+        float branch_value = minimax(board, nextBox, val, otherTurn(turn), depth + 1, alpha, beta);
         //Set our max value to be the best move we find
         unmakeMove(board, box, square, val);
-        if(branch_value < min) {
+        if(branch_value < beta) {
             best_move = move;
-            min = branch_value;
+            beta = branch_value;
+        }
+        if(beta <= alpha) {
+            deleteQueue(possibleMoves);
+            return beta;
         }
     }
     tree_moves[depth] = best_move;
     deleteQueue(possibleMoves);
-    return min;
+    return beta;
     //pthread_mutex_unlock(&thread_count_m);
 }
 

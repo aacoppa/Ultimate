@@ -361,11 +361,11 @@ int testComputer() {
     board = initializeBoard();
     printf("testing minimax()...\n");
 
-    assert(minimax(board, 0, 0, EX, MAX_DEPTH) ==
+    assert(minimax(board, 0, 0, EX, MAX_DEPTH, MIN, MAX) ==
            evaluatePosition(board, EX));
     //Will only call min!
-    assert(minimax(board, 0, 0, EX, MAX_DEPTH-1) == 
-           min(board, 0, 0, EX, MAX_DEPTH-1));
+    assert(minimax(board, 0, 0, EX, MAX_DEPTH-1, MIN, MAX) == 
+           min(board, 0, 0, EX, MAX_DEPTH-1, MIN, MAX));
 
     deleteBoard(board);
 
@@ -379,8 +379,8 @@ int testComputer() {
 
         assert((MAX_DEPTH - 1) % 2);
 
-        assert(minimax(board, winningPatterns[i][2], 0, EX, MAX_DEPTH - 1) == MIN);
-        assert(minimax(board, 0, 1, EX, MAX_DEPTH - 1) == MIN);
+        assert(minimax(board, winningPatterns[i][2], 0, EX, MAX_DEPTH - 1, MIN, MAX) == MIN);
+        assert(minimax(board, 0, 1, EX, MAX_DEPTH - 1, MIN, MAX) == MIN);
         assert(tree_moves[MAX_DEPTH-1] == winningPatterns[i][2] * 10 + 8);
         deleteBoard(board);
     }
@@ -397,7 +397,7 @@ int testComputer() {
     setSquare(board, 7, 2, OH);
     setSquare(board, 7, 6, OH);
 
-    assert(minimax(board, 0, 0, EX, MAX_DEPTH - 2) == MIN);
+    assert(minimax(board, 0, 0, EX, MAX_DEPTH - 2, MIN, MAX) == MIN);
     assert(tree_moves[MAX_DEPTH-1] == 74);
     assert(tree_moves[MAX_DEPTH-2] == 2);
     deleteBoard(board);
@@ -418,7 +418,7 @@ int testComputer() {
     setSquare(board, 7, 2, OH);
     setSquare(board, 7, 6, OH);
 
-    assert(minimax(board, 1, 0, EX, MAX_DEPTH - 3) == MIN);
+    assert(minimax(board, 1, 0, EX, MAX_DEPTH - 3, MIN, MAX) == MIN);
     deleteBoard(board);
 
     printf("minimax() sorta works!\n");

@@ -2,7 +2,7 @@
 #define TESTS0101924
 
 //Define before all other includes...
-#define DEBUG 0
+#define DEBUG 1
 
 #include "board.h"
 #include "queue.h"

@@ -34,14 +34,14 @@ queue_t * generatePossibleMoves(uint32_t ** board, int box, int freebie);
 /* Implements the minimax algorithm
  * calling max and min respectively
  */
-float minimax(uint32_t ** board, int box, int freebie, int turn, int depth);
+float minimax(uint32_t ** board, int box, int freebie, int turn, int depth, float alpha, float beta);
 
 /* Does the max call of the minimax algorithm, returns best possible move sequence and score of it
  */
-float max(uint32_t ** board, int box, int freebie, int turn, int depth);
+float max(uint32_t ** board, int box, int freebie, int turn, int depth, float alpha, float beta);
 
 /* Does the min call of the minimax algorithm, returns worst possible move sequence and score of it
  */
-float min(uint32_t ** board, int box, int freebie, int turn, int depth);
+float min(uint32_t ** board, int box, int freebie, int turn, int depth, float alpha, float beta);
 
 #endif
