@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="static/css/head.css" />
+    <title>{% block title %}{% endblock %} Copparation </title>
+    {% endblock %}
+    {% include "navigation.html" %}
+</head>
+<body>
+    <link rel="stylesheet" href="static/css/content.html">
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <div id="footer">
+        {% block footer %}
+        {% endblock %}
+    </div>
+</body>
+</html>

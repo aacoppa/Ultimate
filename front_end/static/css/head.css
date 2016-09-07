@@ -1,0 +1,18 @@
+#navigation {
+    left-padding:10%;
+    right-padding:10%;
+    width:80%;
+    height:10%;
+}
+#navigation li {
+    display:inline;
+    width:30%;
+    padding-right:3%;
+}
+#navigation li a {
+    color:black;
+    text-decoration:none;
+}
+.active {
+    color:blue;
+}

@@ -1,0 +1,15 @@
+{% set navigation_bar = [
+    ('/', 'index', 'Index'),
+    ('/projects', 'projects', 'Projects'),
+    ('/about', 'about', 'About')
+] -%}
+{% set active_page = active_page|default('index') -%}
+
+{% block navigation %}
+<ul id="navigation">
+{% for href, id, caption in navigation_bar %}
+  <li{% if id == active_page %} class="active"{% endif
+  %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}
